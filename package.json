@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rd-dev-ukraine/rd-redux-utils.git"
+    "url": "https://github.com/rd-dev-ukraine/rd-url-utils.git"
   },
   "dependencies": {
     "path-to-regexp": "^3.1.0"
