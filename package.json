@@ -1,0 +1,36 @@
+{
+  "name": "rd-url-utils",
+  "version": "1.0.0",
+  "description": "Create and manipulate URLs in application in typed way",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --opts tests/mocha.opts",
+    "test:watch": "mocha --watch --opts tests/mocha.opts",
+    "golive": "npm run build && npm run test && npm publish"
+  },
+  "author": "Sergii Tokariev",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/redux": "^3.6.0",
+    "@types/should": "^13.0.0",
+    "mocha": "^5.2.0",
+    "prettier": "^1.15.2",
+    "redux": "^4.0.1",
+    "should": "^13.2.3",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6",
+    "@types/history": "^4.7.3",
+    "@types/node": "^12.7.8",
+    "history": "^4.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rd-dev-ukraine/rd-redux-utils.git"
+  },
+  "dependencies": {
+    "path-to-regexp": "^3.1.0"
+  }
+}
