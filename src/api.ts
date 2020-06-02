@@ -28,7 +28,10 @@ export interface UrlPath<TParams, TQueryString> {
      * @param url An URL to check
      * @param exact If true method would check if pattern matched full URL, if false - only start of URL would be checked.
      */
-    match(url: string | LocationDescriptor, exact: boolean): NoMatch | Match<TParams, TQueryString>;
+    match(
+        url: string | LocationDescriptor,
+        exact: boolean
+    ): (NoMatch | Match<TParams, TQueryString>) & ForceMatch<TParams, TQueryString>;
 
     format(params: TParams, query?: any): string;
 
