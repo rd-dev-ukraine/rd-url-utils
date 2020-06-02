@@ -4,7 +4,7 @@ import pathToRegexp from "path-to-regexp";
 import { Key } from "path-to-regexp";
 import { Location } from "history";
 
-import { LocationDescriptor, UrlPath, NoMatch, Match } from "./api";
+import { LocationDescriptor, UrlPath, NoMatch, Match, ForceMatch } from "./api";
 
 export function createPath<TParams = {}, TQueryString = {}>(urlTemplate: string): UrlPath<TParams, TQueryString> {
     if (!urlTemplate) {
@@ -33,7 +33,10 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
         this.urlTemplate = urlTemplate;
     }
 
-    match(url: string | Location, exact: boolean): NoMatch | Match<TParams, TQueryString> {
+    match(
+        url: string | Location,
+        exact: boolean
+    ): (NoMatch | Match<TParams, TQueryString>) & ForceMatch<TParams, TQueryString> {
         const location = this.normalizeUrl(url);
 
         //
@@ -42,7 +45,12 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
             ? pathToRegexp(this.urlTemplate, paramNames)
             : pathToRegexp(this.urlTemplate, paramNames, { end: false });
         const result = regexpTemplate.exec(location.pathname);
-        const noMatch: NoMatch = { isMatched: false };
+        const noMatch: NoMatch & ForceMatch<TParams, TQueryString> = {
+            isMatched: false,
+            forceMatch() {
+                throw Error("The URL is not matched");
+            }
+        };
 
         if (!result || result.length < paramNames.length + 1) {
             return noMatch;
@@ -76,7 +84,10 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
         return {
             isMatched: true,
             params,
-            query: query as any
+            query: query as any,
+            forceMatch() {
+                return this;
+            }
         };
     }
 

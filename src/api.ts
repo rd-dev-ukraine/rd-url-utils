@@ -1,3 +1,7 @@
+export interface ForceMatch<TParams, TQueryString> {
+    forceMatch(): Match<TParams, TQueryString>;
+}
+
 export interface NoMatch {
     isMatched: false;
 }

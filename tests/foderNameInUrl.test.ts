@@ -4,12 +4,19 @@ const assert = require("assert");
 const createPath = require("../src/createPath.ts").createPath;
 const querystring = require("querystring");
 
+function compareResults(expected: any, actual: any) {
+    delete expected.forceMatch;
+    delete actual.forceMatch;
+
+    assert.deepEqual(expected, actual);
+}
+
 describe("create Path", function() {
     describe("match", function() {
         describe("URL no params", () => {
             generatePathTestCases("/p/settings", (path, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
-                    assert.deepEqual(createPath("/p/settings").match(path, exact), {
+                    compareResults(createPath("/p/settings").match(path, exact), {
                         isMatched: true,
                         params: {},
                         query: expectedQuery
@@ -21,7 +28,7 @@ describe("create Path", function() {
         describe("URL params first", () => {
             generatePathTestCases("/123/123/a", (path, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
-                    assert.deepEqual(createPath("/:a/:b/a").match(path, exact), {
+                    compareResults(createPath("/:a/:b/a").match(path, exact), {
                         isMatched: true,
                         params: { a: "123", b: "123" },
                         query: expectedQuery
@@ -33,7 +40,7 @@ describe("create Path", function() {
         describe("URL params last", () => {
             generatePathTestCases("/p/123", (path, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
-                    assert.deepEqual(createPath("/p/:settings").match(path, exact), {
+                    compareResults(createPath("/p/:settings").match(path, exact), {
                         isMatched: true,
                         params: { settings: "123" },
                         query: expectedQuery
@@ -45,7 +52,7 @@ describe("create Path", function() {
         describe("Optional parameter", () => {
             generatePathTestCases("/a/id/123", (path, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
-                    assert.deepEqual(createPath("/a/id/:name?").match(path, exact), {
+                    compareResults(createPath("/a/id/:name?").match(path, exact), {
                         isMatched: true,
                         params: { name: "123" },
                         query: expectedQuery
@@ -57,7 +64,7 @@ describe("create Path", function() {
         describe("Few params one by one", () => {
             generatePathTestCases("/123/123/123", (path, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
-                    assert.deepEqual(createPath("/:a/:id/:name").match(path, exact), {
+                    compareResults(createPath("/:a/:id/:name").match(path, exact), {
                         isMatched: true,
                         params: { a: "123", id: "123", name: "123" },
                         query: expectedQuery
