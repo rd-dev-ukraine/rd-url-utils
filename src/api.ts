@@ -1,5 +1,6 @@
 export interface ForceMatch<TParams, TQueryString> {
-    forceMatch(): Match<TParams, TQueryString>;
+    /** Casts result to matched or throws error if URL didn't match. */
+    asMatched(): Match<TParams, TQueryString>;
 }
 
 export interface NoMatch {

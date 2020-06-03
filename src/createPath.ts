@@ -47,7 +47,7 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
         const result = regexpTemplate.exec(location.pathname);
         const noMatch: NoMatch & ForceMatch<TParams, TQueryString> = {
             isMatched: false,
-            forceMatch() {
+            asMatched() {
                 throw Error("The URL is not matched");
             }
         };
@@ -85,7 +85,7 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
             isMatched: true,
             params,
             query: query as any,
-            forceMatch() {
+            asMatched() {
                 return this;
             }
         };

@@ -5,8 +5,8 @@ const createPath = require("../src/createPath.ts").createPath;
 const querystring = require("querystring");
 
 function compareResults(expected: any, actual: any) {
-    delete expected.forceMatch;
-    delete actual.forceMatch;
+    delete expected.asMatched;
+    delete actual.asMatched;
 
     assert.deepEqual(expected, actual);
 }
