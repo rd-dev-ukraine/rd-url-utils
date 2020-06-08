@@ -33,9 +33,20 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
         this.urlTemplate = urlTemplate;
     }
 
+    createChildPath<TChildParams, TChildQueryString>(
+        urlTemplate: string
+    ): UrlPath<TParams & TChildParams, TQueryString & TChildQueryString> {
+        const parentTemplate = this.urlTemplate.replace(/\/$/g, "");
+        const childTemplate = urlTemplate || "";
+
+        return new UrlPathImpl<TParams & TChildParams, TQueryString & TChildQueryString>(
+            parentTemplate + "/" + childTemplate
+        );
+    }
+
     match(
         url: string | Location,
-        exact: boolean
+        exact?: boolean
     ): (NoMatch | Match<TParams, TQueryString>) & ForceMatch<TParams, TQueryString> {
         const location = this.normalizeUrl(url);
 

@@ -1,6 +1,6 @@
 {
   "name": "rd-url-utils",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Create and manipulate URLs in application in typed way",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

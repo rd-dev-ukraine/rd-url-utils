@@ -31,7 +31,7 @@ export interface UrlPath<TParams, TQueryString> {
      */
     match(
         url: string | LocationDescriptor,
-        exact: boolean
+        exact?: boolean
     ): (NoMatch | Match<TParams, TQueryString>) & ForceMatch<TParams, TQueryString>;
 
     format(params: TParams, query?: any): string;
@@ -47,4 +47,11 @@ export interface UrlPath<TParams, TQueryString> {
         params?: Partial<TParams>,
         query?: Partial<TQueryString>
     ): string | undefined;
+
+    /**
+     * Creates a path by adding some url template to parent URL
+     */
+    createChildPath<TChildParams, TChildQueryString>(
+        urlTemplate: string
+    ): UrlPath<TParams & TChildParams, TQueryString & TChildQueryString>;
 }
