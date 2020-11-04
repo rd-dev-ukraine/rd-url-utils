@@ -1,7 +1,7 @@
 import { LocationDescriptor } from "history";
 import { describe, it } from "mocha";
+import { createPath } from "../src/createPath";
 const assert = require("assert");
-const createPath = require("../src/createPath.ts").createPath;
 const querystring = require("querystring");
 
 function compareResults(expected: any, actual: any) {
@@ -14,7 +14,7 @@ function compareResults(expected: any, actual: any) {
 describe("create Path", function() {
     describe("match", function() {
         describe("URL no params", () => {
-            generatePathTestCases("/p/settings", (path, expectedQuery, exact, testDescription) => {
+            generatePathTestCases("/p/settings", (path: any, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
                     compareResults(createPath("/p/settings").match(path, exact), {
                         isMatched: true,
@@ -26,7 +26,7 @@ describe("create Path", function() {
         });
 
         describe("URL params first", () => {
-            generatePathTestCases("/123/123/a", (path, expectedQuery, exact, testDescription) => {
+            generatePathTestCases("/123/123/a", (path: any, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
                     compareResults(createPath("/:a/:b/a").match(path, exact), {
                         isMatched: true,
@@ -38,7 +38,7 @@ describe("create Path", function() {
         });
 
         describe("URL params last", () => {
-            generatePathTestCases("/p/123", (path, expectedQuery, exact, testDescription) => {
+            generatePathTestCases("/p/123", (path: any, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
                     compareResults(createPath("/p/:settings").match(path, exact), {
                         isMatched: true,
@@ -50,7 +50,7 @@ describe("create Path", function() {
         });
 
         describe("Optional parameter", () => {
-            generatePathTestCases("/a/id/123", (path, expectedQuery, exact, testDescription) => {
+            generatePathTestCases("/a/id/123", (path: any, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
                     compareResults(createPath("/a/id/:name?").match(path, exact), {
                         isMatched: true,
@@ -62,7 +62,7 @@ describe("create Path", function() {
         });
 
         describe("Few params one by one", () => {
-            generatePathTestCases("/123/123/123", (path, expectedQuery, exact, testDescription) => {
+            generatePathTestCases("/123/123/123", (path: any, expectedQuery, exact, testDescription) => {
                 it(testDescription, () => {
                     compareResults(createPath("/:a/:id/:name").match(path, exact), {
                         isMatched: true,
@@ -108,6 +108,16 @@ describe("create Path", function() {
 
         it("With or without query", function() {
             assert.equal(createPath("/:a/:b/:c").format({ a: 1, b: 2, c: 3 }, { val: 12321 }), "/1/2/3?val=12321");
+        });
+    });
+
+    describe("replace", function() {
+        const path = createPath<{ a: string; b: Number }, { val: number }>("/test/:a/:b");
+        it("should replace keys", () => {
+            assert.equal(path.replace("/test/c/d?val=1", { a: "a" }), "/test/a/d?val=1");
+        });
+        it("should remove null keys", () => {
+            assert.equal(path.replace("/test/c/d?val=1", {}, { val: undefined }), "/test/c/d");
         });
     });
 });

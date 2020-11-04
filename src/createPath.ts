@@ -105,7 +105,9 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
     format(params: TParams, query?: any): string {
         params = params || ({} as any);
 
-        const qs = query ? "?" + querystring.stringify(query) : "";
+        let qs = querystring.stringify(query);
+
+        qs = qs ? "?" + qs : "";
 
         const toPath = pathToRegexp.compile(this.urlTemplate);
         const result = toPath(params as any);
@@ -127,14 +129,8 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
         }
 
         return this.format(
-            {
-                ...(match.params as any),
-                ...(params || ({} as any))
-            },
-            {
-                ...(match.query || ({} as any)),
-                ...(query || ({} as any))
-            }
+            this.overrideProps(match.params, params as any) as any,
+            this.overrideProps(match.query as any, query as any)
         );
     }
 
@@ -157,5 +153,22 @@ class UrlPathImpl<TParams, TQueryString> implements UrlPath<TParams, TQueryStrin
         return {
             pathname: ""
         };
+    }
+
+    private overrideProps<T>(existing: Partial<T>, override: Partial<T>): Partial<T> {
+        let result: Partial<T> = {};
+
+        for (let obj of [existing || {}, override || {}]) {
+            for (let prop in obj) {
+                const value: any = obj[prop];
+                if (value === null || value === undefined || value === "") {
+                    delete result[prop];
+                } else {
+                    result[prop] = value;
+                }
+            }
+        }
+
+        return result;
     }
 }
